@@ -8,11 +8,14 @@ import sys
 
 def main(consumer_key, access_token):
 
+	#アイテム数取得
 	all_items = item_count(consumer_key, access_token, 'all')
 	unread_items = item_count(consumer_key, access_token, 'unread')
 
+	#ページタイトル取得
 	page_title = generate_title(all_items, unread_items)
 
+	#pocketにアイテムを追加する 
 	add_item(consumer_key, access_token, page_title)
 
 
@@ -84,9 +87,10 @@ def add_item(consumer_key, access_token, title):
 
 
 if __name__ == '__main__':
-
-	#コマンドライン引数の処理
-	#引数が2つある場合のみ実際の処理をする。
+	"""
+	コマンドライン引数の処理
+	引数が2つある場合のみ実際の処理をする。
+	"""
     args = sys.argv
     if len(args) == 3:
         consumer_key = args[1]
