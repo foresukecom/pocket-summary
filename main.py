@@ -75,9 +75,9 @@ def add_item(consumer_key, access_token, title):
 	pocketに統計情報を追加する。
 	"""
 	#pocketの仕様上、アイテムのURLが重複すると上書きされるようなので、URLに日付を付与して一意にする。
-	day = datetime.now().strftime('%Y%m%d')
+	day = datetime.now().strftime('%Y%m%d%H%M%S')
 	url = 'http://localhost/{0}'.format(day)
-	
+
 	tags = 'partition'
 
 	#urlopenで全角の文字を指定するとUnicodeEncodeErrorになるので、urllib.parse.quoteでパースする。
@@ -91,13 +91,12 @@ if __name__ == '__main__':
 	コマンドライン引数の処理
 	引数が2つある場合のみ実際の処理をする。
 	"""
-    args = sys.argv
-    if len(args) == 3:
-        consumer_key = args[1]
-        access_token = args[2]
-        main(consumer_key, access_token)
-    else:
-        print('以下形式でconsumer_keyとaccess_tokenを指定してください')
-        print('$ main.py <consumer_key> <access_token>')
-        quit()
-
+	args = sys.argv
+	if len(args) == 3:
+		consumer_key = args[1]
+		access_token = args[2]
+		main(consumer_key, access_token)
+	else:
+		print('以下形式でconsumer_keyとaccess_tokenを指定してください')
+		print('$ main.py <consumer_key> <access_token>')
+		quit()
