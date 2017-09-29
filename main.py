@@ -15,12 +15,8 @@ def main(consumer_key, access_token):
 	all_items = item_count(consumer_key, access_token, 'all')
 	unread_items = item_count(consumer_key, access_token, 'unread')
 
-	#ページタイトル取得
-	page_title = generate_title(all_items, unread_items)
-
 	#pocketにアイテムを追加する 
-	add_item(consumer_key, access_token, page_title)
-
+	add_item(consumer_key, access_token, all_items, unread_items)
 
 
 def item_count(consumer_key, access_token, state):
@@ -57,6 +53,26 @@ def item_count(consumer_key, access_token, state):
 	return item_cnt
 
 
+def add_item(consumer_key, access_token, all_items, unread_items):
+	"""
+	pocketに統計情報を追加する。
+	"""
+
+	#ページタイトル取得
+	title = generate_title(all_items, unread_items)
+
+
+	#pocketの仕様上、アイテムのURLが重複すると上書きされるようなので、URLに日付を付与して一意にする。
+	day = datetime.now().strftime('%Y%m%d%H%M%S')
+	url = 'http://localhost/{0}'.format(day)
+
+	tags = 'partition'
+
+	#urlopenで全角の文字を指定するとUnicodeEncodeErrorになるので、urllib.parse.quoteでパースする。
+	request_url = 'https://getpocket.com/v3/add?consumer_key={0}&access_token={1}&url={2}&title={3}&tags={4}'.format(consumer_key, access_token, url, quote(title), tags)
+	urlopen(request_url)
+
+
 def generate_title(all_items, unread_items):
 	"""
 	pocketに追加する統計情報表示用のアイテムのタイトルを生成する。
@@ -70,22 +86,6 @@ def generate_title(all_items, unread_items):
 	title = '{0}, 全アイテム数:{1}, 未読アイテム数:{2}, 既読率:{3}%'.format(day, all_items, unread_items, read_rate)
 
 	return title
-
-
-
-def add_item(consumer_key, access_token, title):
-	"""
-	pocketに統計情報を追加する。
-	"""
-	#pocketの仕様上、アイテムのURLが重複すると上書きされるようなので、URLに日付を付与して一意にする。
-	day = datetime.now().strftime('%Y%m%d%H%M%S')
-	url = 'http://localhost/{0}'.format(day)
-
-	tags = 'partition'
-
-	#urlopenで全角の文字を指定するとUnicodeEncodeErrorになるので、urllib.parse.quoteでパースする。
-	request_url = 'https://getpocket.com/v3/add?consumer_key={0}&access_token={1}&url={2}&title={3}&tags={4}'.format(consumer_key, access_token, url, quote(title), tags)
-	urlopen(request_url)
 
 
 
