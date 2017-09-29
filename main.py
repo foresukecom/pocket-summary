@@ -7,6 +7,9 @@ import urllib.request
 import sys
 
 def main(consumer_key, access_token):
+	"""
+	mail関数
+	"""
 
 	#アイテム数取得
 	all_items = item_count(consumer_key, access_token, 'all')
